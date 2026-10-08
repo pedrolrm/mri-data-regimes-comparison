@@ -1,1 +1,21 @@
+# Processamento e Manipulação de Imagens
 Pillow>=9.0.0
+
+# Deep Learning e Modelos Pré-treinados
+torch>=2.0.0
+torchvision>=0.15.0
+huggingface_hub>=0.16.0
+
+# Computação Numérica e Classificação (SVM)
+numpy>=1.22.0
+scikit-learn>=1.2.0
+scipy>=1.10.0
+
+# Manipulação de Dados e Serialização
+pandas>=2.0.0
+joblib>=1.2.0
+
+# Utilitários e Visualização
+tqdm>=4.65.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
