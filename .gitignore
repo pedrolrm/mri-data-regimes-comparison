@@ -6,7 +6,10 @@ __pycache__/
 env/
 venv/
 
-data/
+# Ignorar arquivos de dados mas preservar a estrutura de pastas via .gitkeep
+data/**
+!data/**/
+!data/**/.gitkeep
 *.pth
 *.pt
 *.pkl
