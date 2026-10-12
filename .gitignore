@@ -20,3 +20,6 @@ data/**
 .idea/
 
 results/
+outputs/
+logs/
+temp_*.joblib
