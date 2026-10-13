@@ -111,6 +111,16 @@ class ResNet50Encoder(nn.Module):
         else:
             raise TypeError(f"Formato do checkpoint não suportado: {type(checkpoint)}")
 
+        # Mapeamento do backbone sequencial do RadImageNet para a nomenclatura do torchvision.models.ResNet
+        mapeamento_sequencial = {
+            "0.": "conv1.",
+            "1.": "bn1.",
+            "4.": "layer1.",
+            "5.": "layer2.",
+            "6.": "layer3.",
+            "7.": "layer4.",
+        }
+
         # Limpeza e compatibilização do state_dict
         state_dict_limpo = {}
         for chave, tensor in state_dict.items():
@@ -125,6 +135,12 @@ class ResNet50Encoder(nn.Module):
             # Descarta os pesos da camada 'fc' do modelo pré-treinado original
             if chave_limpa.startswith("fc."):
                 continue
+
+            # Mapeia prefixos numéricos do backbone sequencial para os módulos nomeados da ResNet-50
+            for prefixo_antigo, prefixo_novo in mapeamento_sequencial.items():
+                if chave_limpa.startswith(prefixo_antigo):
+                    chave_limpa = prefixo_novo + chave_limpa[len(prefixo_antigo):]
+                    break
 
             state_dict_limpo[chave_limpa] = tensor
 

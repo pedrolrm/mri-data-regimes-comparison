@@ -22,4 +22,7 @@ data/**
 results/
 outputs/
 logs/
+models/**
+!models/**/.gitkeep
+*.joblib
 temp_*.joblib
