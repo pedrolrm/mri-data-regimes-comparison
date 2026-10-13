@@ -81,26 +81,50 @@ def plotar_metricas_por_regime_svm(dados: List[Dict[str, Any]], pasta_saida: Pat
     regimes = [r["regime"] for r in dados]
     acc = [r["acc"] for r in dados]
     f1 = [r["f1"] * 100 if r["f1"] <= 1.0 else r["f1"] for r in dados]
-    sens = [r["sensibilidade"] for r in dados]
-    espec = [r["especificidade"] for r in dados]
+    sens = [r["sensibilidade"] if r["sensibilidade"] > 1.0 else r["sensibilidade"] * 100 for r in dados]
+    espec = [r["especificidade"] if r["especificidade"] > 1.0 else r["especificidade"] * 100 for r in dados]
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    # Espaçamento uniforme categórico entre os regimes para evitar compressão visual
+    x_pos = np.arange(len(regimes))
 
-    ax.plot(regimes, acc, marker="o", markersize=8, linewidth=2.5, color="#1f77b4", label="Acurácia (%)")
-    ax.plot(regimes, f1, marker="s", markersize=8, linewidth=2.5, color="#2ca02c", label="F1-Score (%)")
-    ax.plot(regimes, sens, marker="^", markersize=8, linewidth=2.5, color="#d62728", label="Sensibilidade (ModerateDemented)")
-    ax.plot(regimes, espec, marker="d", markersize=8, linewidth=2.5, color="#9467bd", label="Especificidade (NonDemented)")
+    # Cálculo dinâmico do eixo Y para que NENHUM dado seja cortado
+    todos_valores = acc + f1 + sens + espec
+    menor_val = min(todos_valores)
+    maior_val = max(todos_valores)
+    y_min = max(0.0, np.floor((menor_val - 5.0) / 5.0) * 5.0)
+    y_max = min(105.0, np.ceil((maior_val + 5.0) / 5.0) * 5.0)
 
-    for x, y in zip(regimes, acc):
-        ax.annotate(f"{y:.1f}%", (x, y), textcoords="offset points", xytext=(0, 8), ha="center", fontsize=9, weight="bold", color="#1f77b4")
+    fig, ax = plt.subplots(figsize=(11, 6.5))
 
-    ax.set_title("Desempenho do Classificador SVM (RBF) por Regime Amostral", fontweight="bold", pad=14)
-    ax.set_xlabel("Regime de Dados (Número Total de Amostras - N)")
-    ax.set_ylabel("Métricas de Desempenho no Teste (%)")
-    ax.set_xticks(regimes)
-    ax.set_xticklabels([f"N = {r:,}" for r in regimes])
-    ax.set_ylim(80, 102)
-    ax.legend(loc="lower right", frameon=True)
+    ax.plot(x_pos, acc, marker="o", markersize=8.5, linewidth=2.5, color="#1f77b4", label="Acurácia (%)")
+    ax.plot(x_pos, f1, marker="s", markersize=8.5, linewidth=2.5, color="#2ca02c", label="F1-Score (%)")
+    ax.plot(x_pos, sens, marker="^", markersize=8.5, linewidth=2.5, color="#d62728", label="Sensibilidade (ModerateDemented)")
+    ax.plot(x_pos, espec, marker="d", markersize=8.5, linewidth=2.5, color="#9467bd", label="Especificidade (NonDemented)")
+
+    # Anotações limpas em cada curva
+    for x, y in zip(x_pos, acc):
+        ax.annotate(f"{y:.1f}%", (x, y), textcoords="offset points", xytext=(0, 9), ha="center", fontsize=8.5, weight="bold", color="#1f77b4")
+    for x, y in zip(x_pos, sens):
+        ax.annotate(f"{y:.1f}%", (x, y), textcoords="offset points", xytext=(0, 9), ha="center", fontsize=8.5, weight="bold", color="#d62728")
+    for x, y in zip(x_pos, espec):
+        ax.annotate(f"{y:.1f}%", (x, y), textcoords="offset points", xytext=(0, -14), ha="center", fontsize=8.5, weight="bold", color="#9467bd")
+
+    ax.set_title("Desempenho do Classificador SVM (RBF) por Regime Amostral", fontweight="bold", pad=28)
+    ax.set_xlabel("Regime de Dados (Número Total de Amostras - N)", fontweight="bold", labelpad=10)
+    ax.set_ylabel("Métricas de Desempenho no Teste (%)", fontweight="bold", labelpad=10)
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels([f"N = {r:,}" for r in regimes], fontweight="bold")
+    ax.set_ylim(y_min, y_max)
+
+    # Legenda fora da área dos dados para não cobrir nenhum ponto
+    ax.legend(
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.13),
+        ncol=2,
+        frameon=True,
+        facecolor="white",
+        edgecolor="#cccccc"
+    )
 
     plt.tight_layout()
     plt.savefig(pasta_saida / "svm_metricas_regimes.png", bbox_inches="tight")
