@@ -21,6 +21,7 @@ Otimizado para aceleração por hardware na NVIDIA GeForce RTX 5060 (8GB):
 
 import argparse
 from datetime import datetime
+import json
 import os
 from pathlib import Path
 import random
@@ -735,6 +736,11 @@ def main() -> None:
                     f"{r['especificidade']*100:<15.2f}% | {r['f1_macro']:<8.4f}"
                 )
             logger.log("=" * 105 + "\n")
+            
+            caminho_json = pasta_saida / f"relatorio_regimes_resnet50_{t}.json"
+            with open(caminho_json, "w", encoding="utf-8") as f_json:
+                json.dump({"tarefa": t, "timestamp": datetime.now().isoformat(), "resultados": res_lista}, f_json, indent=4)
+            logger.log(f"[INFO] Relatório estruturado salvo em: {caminho_json}\n")
 
     finally:
         logger.log(f"\nSessão finalizada: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
