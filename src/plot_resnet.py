@@ -1,12 +1,14 @@
 """
 Módulo e Script de Geração de Gráficos Dedicados à ResNet-50 (RadImageNet).
 
-Gera figuras científicas focadas na avaliação da arquitetura convolucional ResNet-50
-desenvolvida nos experimentos comparativos:
+Gera figuras científicas exclusivamente a partir de dados reais gerados
+durante o treinamento convolucional da ResNet-50 (commits do Jonathan):
 1. Evolução das Métricas por Regime Amostral (Acurácia, Sensibilidade, Especificidade, F1-Macro vs N).
-2. Curvas de Treinamento por Época (Loss e Acurácia de Treino vs Validação, destacando Fases 1 e 2).
+2. Curvas de Treinamento por Época (Loss e Acurácia de Treino vs Validação).
 3. Matriz de Confusão da ResNet-50 no regime N = 20.000.
-4. Tempo Total de Treinamento e Alocação de Memória VRAM por Regime.
+
+IMPORTANTE: Opera estritamente com dados reais. Se o relatório ou logs
+não forem localizados, interrompe a execução com FileNotFoundError.
 """
 
 import argparse
@@ -36,7 +38,7 @@ def configurar_estilo() -> None:
         "axes.titlesize": 13,
         "xtick.labelsize": 10,
         "ytick.labelsize": 10,
-        "legend.fontsize": 11,
+        "legend.fontsize": 10.5,
         "figure.titlesize": 15,
         "figure.dpi": 300,
         "savefig.dpi": 300,
@@ -52,7 +54,8 @@ def carregar_resultados_resnet(
     pasta_logs: Optional[Union[str, Path]] = None
 ) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
     """
-    Carrega resultados da ResNet-50. Retorna (resultados_regimes, historico_epocas).
+    Carrega resultados reais da ResNet-50.
+    Lança FileNotFoundError caso nenhum dado real seja encontrado.
     """
     candidatos_json = [
         Path(caminho_json) if caminho_json else None,
@@ -62,20 +65,30 @@ def carregar_resultados_resnet(
 
     for p in candidatos_json:
         if p and p.exists():
-            print(f"[INFO] Carregando relatório JSON da ResNet-50: {p}")
+            print(f"[INFO] Carregando relatório real da ResNet-50 de: {p.resolve()}")
             with open(p, "r", encoding="utf-8") as f:
                 dados = json.load(f)
-            return dados.get("resultados", dados), []
+            resultados = dados.get("resultados", dados)
+            if resultados and isinstance(resultados, list):
+                return resultados, []
 
     # Parsing a partir de logs em texto
     pasta_busca = Path(pasta_logs) if pasta_logs else Path("outputs/logs")
     if pasta_busca.exists():
         logs_txt = sorted(pasta_busca.glob("treinamento_resnet50_binario_*.txt"), reverse=True)
         if logs_txt:
-            print(f"[INFO] Fazendo parsing do log de texto: {logs_txt[0]}")
-            return parse_log_resnet_completo(logs_txt[0])
+            print(f"[INFO] Fazendo parsing do log de texto real: {logs_txt[0].resolve()}")
+            res, epocas = parse_log_resnet_completo(logs_txt[0])
+            if res:
+                return res, epocas
 
-    return [], []
+    raise FileNotFoundError(
+        "Não foi possível encontrar os resultados reais de treinamento da ResNet-50.\n"
+        "Arquivos verificados:\n"
+        "  - outputs/relatorio_regimes_resnet50_moderate.json\n"
+        "  - outputs/logs/treinamento_resnet50_binario_*.txt\n\n"
+        "Execute primeiro o treinamento da ResNet-50 (train_binary.py) para gerar os logs antes de criar os gráficos."
+    )
 
 
 def parse_log_resnet_completo(caminho_log: Path) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
@@ -114,55 +127,48 @@ def parse_log_resnet_completo(caminho_log: Path) -> Tuple[List[Dict[str, Any]], 
     return resultados_regimes, historico_epocas
 
 
-def obter_dados_demo_resnet() -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
-    """Dados de referência para demonstração da ResNet-50."""
-    regimes = [
-        {"regime": 1000, "treino": 800, "tempo_s": 52.8, "acc": 86.20, "sensibilidade": 84.50, "especificidade": 87.90, "f1": 0.8615, "matriz_confusao": {"tn": 88, "fp": 12, "fn": 15, "tp": 85}},
-        {"regime": 5000, "treino": 4000, "tempo_s": 195.4, "acc": 94.10, "sensibilidade": 93.80, "especificidade": 94.40, "f1": 0.9408, "matriz_confusao": {"tn": 472, "fp": 28, "fn": 31, "tp": 469}},
-        {"regime": 10000, "treino": 8000, "tempo_s": 385.0, "acc": 96.80, "sensibilidade": 96.60, "especificidade": 97.00, "f1": 0.9679, "matriz_confusao": {"tn": 970, "fp": 30, "fn": 34, "tp": 966}},
-        {"regime": 20000, "treino": 16000, "tempo_s": 765.2, "acc": 98.90, "sensibilidade": 98.80, "especificidade": 99.00, "f1": 0.9890, "matriz_confusao": {"tn": 1980, "fp": 20, "fn": 24, "tp": 1976}},
-    ]
-
-    epocas = [
-        {"epoca": 1, "train_loss": 0.5820, "train_acc": 72.5, "val_loss": 0.4510, "val_acc": 82.0, "val_f1": 0.819, "auc": 0.895},
-        {"epoca": 2, "train_loss": 0.4210, "train_acc": 82.1, "val_loss": 0.3540, "val_acc": 86.5, "val_f1": 0.864, "auc": 0.934},
-        {"epoca": 3, "train_loss": 0.2850, "train_acc": 89.2, "val_loss": 0.2100, "val_acc": 92.4, "val_f1": 0.923, "auc": 0.968},
-        {"epoca": 4, "train_loss": 0.1980, "train_acc": 93.4, "val_loss": 0.1550, "val_acc": 95.0, "val_f1": 0.949, "auc": 0.982},
-        {"epoca": 5, "train_loss": 0.1420, "train_acc": 95.7, "val_loss": 0.1180, "val_acc": 96.6, "val_f1": 0.965, "auc": 0.990},
-        {"epoca": 6, "train_loss": 0.1010, "train_acc": 97.2, "val_loss": 0.0890, "val_acc": 97.5, "val_f1": 0.974, "auc": 0.994},
-        {"epoca": 7, "train_loss": 0.0760, "train_acc": 98.1, "val_loss": 0.0720, "val_acc": 98.2, "val_f1": 0.981, "auc": 0.997},
-        {"epoca": 8, "train_loss": 0.0580, "train_acc": 98.6, "val_loss": 0.0630, "val_acc": 98.5, "val_f1": 0.985, "auc": 0.998},
-        {"epoca": 9, "train_loss": 0.0460, "train_acc": 99.0, "val_loss": 0.0580, "val_acc": 98.7, "val_f1": 0.987, "auc": 0.999},
-        {"epoca": 10, "train_loss": 0.0390, "train_acc": 99.3, "val_loss": 0.0550, "val_acc": 98.9, "val_f1": 0.989, "auc": 0.999},
-    ]
-    return regimes, epocas
-
-
 def plotar_metricas_por_regime_resnet(dados: List[Dict[str, Any]], pasta_saida: Path) -> None:
-    """Gera gráfico da evolução de métricas da ResNet-50 por regime."""
+    """Gera gráfico da evolução de métricas reais da ResNet-50 por regime."""
     regimes = [r["regime"] for r in dados]
     acc = [r["acc"] if r["acc"] > 1.0 else r["acc"] * 100 for r in dados]
     f1 = [r["f1"] * 100 if r["f1"] <= 1.0 else r["f1"] for r in dados]
     sens = [r["sensibilidade"] if r["sensibilidade"] > 1.0 else r["sensibilidade"] * 100 for r in dados]
     espec = [r["especificidade"] if r["especificidade"] > 1.0 else r["especificidade"] * 100 for r in dados]
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    x_pos = np.arange(len(regimes))
+    todos = acc + f1 + sens + espec
+    y_min = max(0.0, np.floor((min(todos) - 5.0) / 5.0) * 5.0)
+    y_max = min(105.0, np.ceil((max(todos) + 5.0) / 5.0) * 5.0)
 
-    ax.plot(regimes, acc, marker="s", markersize=8, linewidth=2.5, color="#d62728", label="Acurácia (%)")
-    ax.plot(regimes, f1, marker="o", markersize=8, linewidth=2.5, color="#ff7f0e", label="F1-Score (%)")
-    ax.plot(regimes, sens, marker="^", markersize=8, linewidth=2.5, color="#8c564b", label="Sensibilidade (ModerateDemented)")
-    ax.plot(regimes, espec, marker="d", markersize=8, linewidth=2.5, color="#e377c2", label="Especificidade (NonDemented)")
+    fig, ax = plt.subplots(figsize=(11, 6.5))
 
-    for x, y in zip(regimes, acc):
-        ax.annotate(f"{y:.1f}%", (x, y), textcoords="offset points", xytext=(0, 8), ha="center", fontsize=9, weight="bold", color="#d62728")
+    ax.plot(x_pos, acc, marker="s", markersize=8.5, linewidth=2.5, color="#d62728", label="Acurácia (%)")
+    ax.plot(x_pos, f1, marker="o", markersize=8.5, linewidth=2.5, color="#ff7f0e", label="F1-Score (%)")
+    ax.plot(x_pos, sens, marker="^", markersize=8.5, linewidth=2.5, color="#8c564b", label="Sensibilidade (ModerateDemented)")
+    ax.plot(x_pos, espec, marker="d", markersize=8.5, linewidth=2.5, color="#e377c2", label="Especificidade (NonDemented)")
 
-    ax.set_title("Desempenho da ResNet-50 (RadImageNet) por Regime Amostral", fontweight="bold", pad=14)
-    ax.set_xlabel("Regime de Dados (Número Total de Amostras - N)")
-    ax.set_ylabel("Métricas de Desempenho no Teste (%)")
-    ax.set_xticks(regimes)
-    ax.set_xticklabels([f"N = {r:,}" for r in regimes])
-    ax.set_ylim(80, 102)
-    ax.legend(loc="lower right", frameon=True)
+    for x, y in zip(x_pos, acc):
+        ax.annotate(f"{y:.1f}%", (x, y), textcoords="offset points", xytext=(0, 9), ha="center", fontsize=8.5, weight="bold", color="#d62728")
+    for x, y in zip(x_pos, sens):
+        ax.annotate(f"{y:.1f}%", (x, y), textcoords="offset points", xytext=(0, 9), ha="center", fontsize=8.5, weight="bold", color="#8c564b")
+    for x, y in zip(x_pos, espec):
+        ax.annotate(f"{y:.1f}%", (x, y), textcoords="offset points", xytext=(0, -14), ha="center", fontsize=8.5, weight="bold", color="#e377c2")
+
+    ax.set_title("Desempenho da ResNet-50 (RadImageNet) por Regime Amostral", fontweight="bold", pad=28)
+    ax.set_xlabel("Regime de Dados (Número Total de Amostras - N)", fontweight="bold", labelpad=10)
+    ax.set_ylabel("Métricas de Desempenho no Teste (%)", fontweight="bold", labelpad=10)
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels([f"N = {r:,}" for r in regimes], fontweight="bold")
+    ax.set_ylim(y_min, y_max)
+
+    ax.legend(
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.13),
+        ncol=2,
+        frameon=True,
+        facecolor="white",
+        edgecolor="#cccccc"
+    )
 
     plt.tight_layout()
     plt.savefig(pasta_saida / "resnet_metricas_regimes.png", bbox_inches="tight")
@@ -214,7 +220,10 @@ def plotar_matriz_confusao_resnet(dados: List[Dict[str, Any]], pasta_saida: Path
     """Gera matriz de confusão da ResNet-50 no regime N = 20.000."""
     ultimo = dados[-1]
     n_regime = ultimo["regime"]
-    m = ultimo.get("matriz_confusao", {"tn": 1980, "fp": 20, "fn": 24, "tp": 1976})
+    m = ultimo.get("matriz_confusao")
+    if not m:
+        return
+
     matriz = np.array([[m["tn"], m["fp"]], [m["fn"], m["tp"]]])
 
     fig, ax = plt.subplots(figsize=(7, 6))
@@ -243,10 +252,9 @@ def plotar_matriz_confusao_resnet(dados: List[Dict[str, Any]], pasta_saida: Path
 def gerar_graficos_resnet(
     caminho_json: Optional[Union[str, Path]] = None,
     pasta_logs: Optional[Union[str, Path]] = None,
-    pasta_saida: Union[str, Path] = "outputs/figures_resnet",
-    usar_demo: bool = False
+    pasta_saida: Union[str, Path] = "outputs/figures_resnet"
 ) -> None:
-    """Função orquestradora dos gráficos da ResNet-50."""
+    """Função orquestradora dos gráficos reais da ResNet-50."""
     configurar_estilo()
     p_saida = Path(pasta_saida)
     p_saida.mkdir(parents=True, exist_ok=True)
@@ -255,13 +263,7 @@ def gerar_graficos_resnet(
     print("GERADOR DE GRÁFICOS: RESNET-50 (RADIMAGENET)")
     print("=" * 70)
 
-    if usar_demo:
-        dados, epocas = obter_dados_demo_resnet()
-    else:
-        dados, epocas = carregar_resultados_resnet(caminho_json, pasta_logs)
-        if not dados:
-            print("[AVISO] Resultados da ResNet-50 não encontrados. Utilizando dados de referência...")
-            dados, epocas = obter_dados_demo_resnet()
+    dados, epocas = carregar_resultados_resnet(caminho_json, pasta_logs)
 
     print(f"[INFO] Gerando figuras da ResNet-50 em: {p_saida.resolve()}")
     plotar_metricas_por_regime_resnet(dados, p_saida)
@@ -276,10 +278,9 @@ def main() -> None:
     parser.add_argument("--json_path", type=str, default=None, help="Caminho do relatorio_regimes_resnet50_moderate.json")
     parser.add_argument("--logs_dir", type=str, default="outputs/logs", help="Diretório de logs .txt")
     parser.add_argument("--output_dir", type=str, default="outputs/figures_resnet", help="Pasta de saída")
-    parser.add_argument("--demo", action="store_true", help="Gera com dados de demonstração")
 
     args = parser.parse_args()
-    gerar_graficos_resnet(caminho_json=args.json_path, pasta_logs=args.logs_dir, pasta_saida=args.output_dir, usar_demo=args.demo)
+    gerar_graficos_resnet(caminho_json=args.json_path, pasta_logs=args.logs_dir, pasta_saida=args.output_dir)
 
 
 if __name__ == "__main__":

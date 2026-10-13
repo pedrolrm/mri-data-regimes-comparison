@@ -335,10 +335,9 @@ def gerar_todos_os_graficos(
     caminho_svm_json: Optional[Union[str, Path]] = None,
     caminho_resnet_json: Optional[Union[str, Path]] = None,
     pasta_logs_resnet: Optional[Union[str, Path]] = None,
-    pasta_saida: Union[str, Path] = "outputs/figures",
-    usar_demo: bool = False
+    pasta_saida: Union[str, Path] = "outputs/figures"
 ) -> None:
-    """Coordena o pipeline de geração de todas as figuras comparativas."""
+    """Coordena o pipeline de geração de todas as figuras comparativas com dados 100% reais."""
     configurar_estilo_cientifico()
     p_saida = Path(pasta_saida)
     p_saida.mkdir(parents=True, exist_ok=True)
@@ -347,16 +346,13 @@ def gerar_todos_os_graficos(
     print("GERADOR DE GRÁFICOS CIENTÍFICOS: SVM vs RESNET-50 (RADIMAGENET)")
     print("=" * 75)
 
-    if usar_demo:
-        print("[INFO] Modo demonstração ativado. Utilizando dados de referência...")
-        dados_svm, dados_resnet = obter_dados_demonstracao()
-    else:
-        dados_svm = carregar_resultados_svm(caminho_svm_json)
-        dados_resnet = carregar_resultados_resnet(caminho_resnet_json, pasta_logs_resnet)
+    dados_svm = carregar_resultados_svm(caminho_svm_json)
+    if not dados_svm:
+        raise FileNotFoundError("Relatório de resultados do SVM ('relatorio_regimes_svm.json') não encontrado. Execute o treino do SVM primeiro.")
 
-        if not dados_svm or not dados_resnet:
-            print("[AVISO] Resultados completos não encontrados em disco. Ativando modo demonstração para visualização...")
-            dados_svm, dados_resnet = obter_dados_demonstracao()
+    dados_resnet = carregar_resultados_resnet(caminho_resnet_json, pasta_logs_resnet)
+    if not dados_resnet:
+        raise FileNotFoundError("Relatório ou logs da ResNet-50 não encontrados. Execute o treino da ResNet-50 primeiro.")
 
     print(f"[INFO] Regimes localizados: {[r['regime'] for r in dados_svm]}")
     print(f"[INFO] Gerando e salvando figuras em alta resolução em: {p_saida.resolve()}...")
