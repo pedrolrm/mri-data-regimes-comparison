@@ -118,13 +118,13 @@ def plot_svm_metrics(data: List[Dict[str, Any]], output_dir: Path) -> None:
     ax.set_xticklabels([f"N = {r:,}" for r in regimes], fontweight="bold")
     ax.set_ylim(y_min, y_max)
 
-    # Place title with generous padding
-    ax.set_title("Support Vector Machine (RBF) Performance Across Data Regimes", fontweight="bold", pad=42, fontsize=13.5)
+    # Clean concise title on top
+    ax.set_title("SVM Performance Across Data Regimes", fontweight="bold", pad=14, fontsize=13)
 
-    # Place legend above plot without overlapping title
+    # Legend cleanly placed below the plot area
     ax.legend(
-        loc="lower center",
-        bbox_to_anchor=(0.5, 1.01),
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.16),
         ncol=2,
         frameon=True,
         facecolor="white",
@@ -139,7 +139,7 @@ def plot_svm_metrics(data: List[Dict[str, Any]], output_dir: Path) -> None:
 
 
 def plot_svm_confusion_matrix(data: List[Dict[str, Any]], output_dir: Path) -> None:
-    """Plots confusion matrix from the largest real evaluated regime (e.g., N=20,000)."""
+    """Plots confusion matrix from the largest evaluated regime (e.g., N=20,000)."""
     last = data[-1]
     n_regime = last["regime"]
     m = last.get("matriz_confusao")
@@ -172,8 +172,8 @@ def plot_svm_confusion_matrix(data: List[Dict[str, Any]], output_dir: Path) -> N
     )
 
     ax.set_title(
-        f"Real Confusion Matrix - SVM RBF (Regime N = {n_regime:,})\n"
-        f"Test Accuracy: {real_acc:.2f}% | Test Samples: {total_test:,}",
+        f"SVM Confusion Matrix (N = {n_regime:,})\n"
+        f"Accuracy: {real_acc:.2f}% | Test Samples: {total_test:,}",
         fontweight="bold", pad=12
     )
     ax.set_xlabel("Predicted Label", fontweight="bold", labelpad=8)
@@ -198,7 +198,7 @@ def plot_svm_training_time(data: List[Dict[str, Any]], output_dir: Path) -> None
         h = b.get_height()
         ax.annotate(f"{h:.2f} s", (b.get_x() + b.get_width() / 2, h), textcoords="offset points", xytext=(0, 5), ha="center", fontsize=9.5, weight="bold")
 
-    ax.set_title("Real SVM Training Time Across Data Regimes", fontweight="bold", pad=12)
+    ax.set_title("SVM Training Time Across Data Regimes", fontweight="bold", pad=12)
     ax.set_xlabel("Sample Regime (N)", fontweight="bold")
     ax.set_ylabel("Training Time (seconds)", fontweight="bold")
     ax.set_ylim(0, max(times) * 1.25 if max(times) > 0 else 1.0)

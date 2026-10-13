@@ -156,11 +156,11 @@ def plot_resnet_metrics(data: List[Dict[str, Any]], output_dir: Path) -> None:
     ax.set_xticklabels([f"N = {r:,}" for r in regimes], fontweight="bold")
     ax.set_ylim(y_min, y_max)
 
-    ax.set_title("ResNet-50 (RadImageNet Fine-Tuning) Performance Across Data Regimes", fontweight="bold", pad=42, fontsize=13.5)
+    ax.set_title("ResNet-50 Performance Across Data Regimes", fontweight="bold", pad=14, fontsize=13)
 
     ax.legend(
-        loc="lower center",
-        bbox_to_anchor=(0.5, 1.01),
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.16),
         ncol=2,
         frameon=True,
         facecolor="white",
@@ -246,8 +246,8 @@ def plot_resnet_confusion_matrix(data: List[Dict[str, Any]], output_dir: Path) -
     )
 
     ax.set_title(
-        f"Real Confusion Matrix - ResNet-50 (Regime N = {n_regime:,})\n"
-        f"Test Accuracy: {real_acc:.2f}% | Test Samples: {total_test:,}",
+        f"ResNet-50 Confusion Matrix (N = {n_regime:,})\n"
+        f"Accuracy: {real_acc:.2f}% | Test Samples: {total_test:,}",
         fontweight="bold", pad=12
     )
     ax.set_xlabel("Predicted Label", fontweight="bold", labelpad=8)
