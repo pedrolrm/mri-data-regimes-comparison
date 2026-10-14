@@ -187,21 +187,41 @@ def plot_svm_confusion_matrix(data: List[Dict[str, Any]], output_dir: Path) -> N
 
 
 def plot_svm_training_time(data: List[Dict[str, Any]], output_dir: Path) -> None:
-    """Plots training time in seconds across regimes."""
+    """Plots training time (seconds and minutes) across sample regimes matching ResNet style."""
     regimes = [r["regime"] for r in data]
-    times = [r.get("tempo", 0.0) for r in data]
+    times_s = [r.get("tempo", r.get("tempo_s", 0.0)) for r in data]
+    x_pos = np.arange(len(regimes))
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    bars = ax.bar([f"N = {r:,}" for r in regimes], times, color="#2b5c8f", edgecolor="black", width=0.55)
+    fig, ax = plt.subplots(figsize=(9, 5.8))
 
-    for b in bars:
+    bar_color = "#1f77b4"
+    bars = ax.bar(x_pos, times_s, width=0.48, color=bar_color, edgecolor="#0d47a1", linewidth=1.2, alpha=0.9, zorder=3)
+
+    # Scaling trendline accompanying the bars
+    ax.plot(x_pos, times_s, color="#d32f2f", marker="o", markersize=7, linewidth=2.0, linestyle="--", zorder=4, label="Scaling Trend")
+
+    for b, t in zip(bars, times_s):
         h = b.get_height()
-        ax.annotate(f"{h:.2f} s", (b.get_x() + b.get_width() / 2, h), textcoords="offset points", xytext=(0, 5), ha="center", fontsize=9.5, weight="bold")
+        label_text = f"{t:.2f} s\n({t/60.0:.1f} min)" if t >= 60.0 else f"{t:.2f} s"
+        ax.annotate(
+            label_text,
+            xy=(b.get_x() + b.get_width() / 2, h),
+            textcoords="offset points",
+            xytext=(0, 6),
+            ha="center",
+            va="bottom",
+            fontsize=9.5,
+            weight="bold",
+            color="#0d47a1"
+        )
 
-    ax.set_title("SVM Training Time Across Data Regimes", fontweight="bold", pad=12)
-    ax.set_xlabel("Sample Regime (N)", fontweight="bold")
-    ax.set_ylabel("Training Time (seconds)", fontweight="bold")
-    ax.set_ylim(0, max(times) * 1.25 if max(times) > 0 else 1.0)
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels([f"N = {r:,}" for r in regimes], fontweight="bold")
+    ax.set_xlabel("Sample Regime (Total Sample Size - N)", fontweight="bold", labelpad=10)
+    ax.set_ylabel("Training Time (seconds)", fontweight="bold", labelpad=10)
+    ax.set_ylim(0, max(times_s) * 1.25 if max(times_s) > 0 else 1.0)
+    ax.set_title("SVM Training Time Across Data Regimes", fontweight="bold", pad=14, fontsize=13)
+    ax.legend(loc="upper left", frameon=True, facecolor="white", edgecolor="#cccccc")
 
     plt.tight_layout()
     plt.savefig(output_dir / "svm_training_time.png", bbox_inches="tight")

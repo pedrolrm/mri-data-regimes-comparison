@@ -153,22 +153,20 @@ def plot_resnet_metrics(data: List[Dict[str, Any]], output_dir: Path) -> None:
     bbox_halo = dict(boxstyle="round,pad=0.15", facecolor="white", edgecolor="none", alpha=0.85)
 
     for i in range(len(regimes)):
-        if i == 0:  # N = 1,000 (métricas bem distribuídas)
-            ax.annotate(f"{espec[i]:.1f}%", (x_pos[i], espec[i]), textcoords="offset points", xytext=(0, 7), ha="center", va="bottom", fontsize=9, weight="bold", color="#9467bd", bbox=bbox_halo)
-            ax.annotate(f"{acc[i]:.1f}%", (x_pos[i], acc[i]), textcoords="offset points", xytext=(0, 7), ha="center", va="bottom", fontsize=9, weight="bold", color="#1f77b4", bbox=bbox_halo)
-            ax.annotate(f"{f1[i]:.1f}%", (x_pos[i], f1[i]), textcoords="offset points", xytext=(0, -15), ha="center", va="top", fontsize=9, weight="bold", color="#2ca02c", bbox=bbox_halo)
-            ax.annotate(f"{sens[i]:.1f}%", (x_pos[i], sens[i]), textcoords="offset points", xytext=(0, -15), ha="center", va="top", fontsize=9, weight="bold", color="#d62728", bbox=bbox_halo)
-        else:  # N = 5,000, 10,000 e 20,000 (quadrantes limpos: Topo-Esq=Acc, Topo-Dir=Espec, Base-Esq=F1, Base-Dir=Sens)
-            ax.annotate(f"{acc[i]:.1f}%", (x_pos[i], acc[i]), textcoords="offset points", xytext=(-10, 7), ha="right", va="bottom", fontsize=9, weight="bold", color="#1f77b4", bbox=bbox_halo)
-            ax.annotate(f"{espec[i]:.1f}%", (x_pos[i], espec[i]), textcoords="offset points", xytext=(10, 7), ha="left", va="bottom", fontsize=9, weight="bold", color="#9467bd", bbox=bbox_halo)
-            ax.annotate(f"{f1[i]:.1f}%", (x_pos[i], f1[i]), textcoords="offset points", xytext=(-10, -15), ha="right", va="top", fontsize=9, weight="bold", color="#2ca02c", bbox=bbox_halo)
-            ax.annotate(f"{sens[i]:.1f}%", (x_pos[i], sens[i]), textcoords="offset points", xytext=(10, -15), ha="left", va="top", fontsize=9, weight="bold", color="#d62728", bbox=bbox_halo)
+        # Top-Left: Accuracy
+        ax.annotate(f"{acc[i]:.1f}%", (x_pos[i], acc[i]), textcoords="offset points", xytext=(-14, 8), ha="right", va="bottom", fontsize=9.5, weight="bold", color="#1f77b4", bbox=bbox_halo)
+        # Top-Right: Specificity
+        ax.annotate(f"{espec[i]:.1f}%", (x_pos[i], espec[i]), textcoords="offset points", xytext=(14, 8), ha="left", va="bottom", fontsize=9.5, weight="bold", color="#9467bd", bbox=bbox_halo)
+        # Bottom-Left: F1-Score
+        ax.annotate(f"{f1[i]:.1f}%", (x_pos[i], f1[i]), textcoords="offset points", xytext=(-14, -16), ha="right", va="top", fontsize=9.5, weight="bold", color="#2ca02c", bbox=bbox_halo)
+        # Bottom-Right: Sensitivity
+        ax.annotate(f"{sens[i]:.1f}%", (x_pos[i], sens[i]), textcoords="offset points", xytext=(14, -16), ha="left", va="top", fontsize=9.5, weight="bold", color="#d62728", bbox=bbox_halo)
 
     ax.set_xticks(x_pos)
     ax.set_xticklabels([f"N = {r:,}" for r in regimes], fontweight="bold")
     ax.set_xlabel("Sample Regime (Total Sample Size - N)", fontweight="bold", labelpad=10)
     ax.set_ylabel("Test Performance Metrics (%)", fontweight="bold", labelpad=10)
-    ax.set_xlim(-0.25, len(regimes) - 0.65)
+    ax.set_xlim(-0.35, len(regimes) - 0.5)
     ax.set_ylim(65, 105)
 
     ax.set_title("ResNet-50 Performance Across Data Regimes", fontweight="bold", pad=14, fontsize=13)
@@ -278,6 +276,47 @@ def plot_resnet_confusion_matrix(data: List[Dict[str, Any]], output_dir: Path) -
     print(f"[OK] Saved: {output_dir / 'resnet_confusion_matrix.png'}")
 
 
+def plot_resnet_training_time(data: List[Dict[str, Any]], output_dir: Path) -> None:
+    """Plots training time (seconds and minutes) across sample regimes."""
+    regimes = [r["regime"] for r in data]
+    times_s = [r.get("tempo_s", 0.0) for r in data]
+    x_pos = np.arange(len(regimes))
+
+    fig, ax = plt.subplots(figsize=(9, 5.8))
+
+    bars = ax.bar(x_pos, times_s, width=0.48, color="#1f77b4", edgecolor="#0d47a1", linewidth=1.2, alpha=0.9, zorder=3)
+    ax.plot(x_pos, times_s, color="#d32f2f", marker="o", markersize=7, linewidth=2.0, linestyle="--", zorder=4, label="Scaling Trend")
+
+    for b, t in zip(bars, times_s):
+        h = b.get_height()
+        label_text = f"{t:.1f} s\n({t/60.0:.1f} min)"
+        ax.annotate(
+            label_text,
+            xy=(b.get_x() + b.get_width() / 2, h),
+            textcoords="offset points",
+            xytext=(0, 6),
+            ha="center",
+            va="bottom",
+            fontsize=9.5,
+            weight="bold",
+            color="#0d47a1"
+        )
+
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels([f"N = {r:,}" for r in regimes], fontweight="bold")
+    ax.set_xlabel("Sample Regime (Total Sample Size - N)", fontweight="bold", labelpad=10)
+    ax.set_ylabel("Training Time (seconds)", fontweight="bold", labelpad=10)
+    ax.set_ylim(0, max(times_s) * 1.25)
+    ax.set_title("ResNet-50 Training Time Across Data Regimes", fontweight="bold", pad=14, fontsize=13)
+    ax.legend(loc="upper left", frameon=True, facecolor="white", edgecolor="#cccccc")
+
+    plt.tight_layout()
+    plt.savefig(output_dir / "resnet_training_time.png", bbox_inches="tight")
+    plt.savefig(output_dir / "resnet_training_time.pdf", bbox_inches="tight")
+    plt.close()
+    print(f"[OK] Saved: {output_dir / 'resnet_training_time.png'}")
+
+
 def generate_resnet_plots(
     json_path: Optional[Union[str, Path]] = None,
     logs_dir: Optional[Union[str, Path]] = None,
@@ -297,6 +336,7 @@ def generate_resnet_plots(
     print(f"[INFO] Exporting high-resolution figures (300 DPI PNG & PDF) to: {out.resolve()}")
 
     plot_resnet_metrics(data, out)
+    plot_resnet_training_time(data, out)
     plot_resnet_confusion_matrix(data, out)
     plot_resnet_learning_curves(epochs, out)
 
