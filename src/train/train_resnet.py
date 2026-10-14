@@ -527,7 +527,7 @@ def resolver_caminho_dados(argumento_dados: Optional[str]) -> Path:
     Detecta automaticamente o caminho dos dados, priorizando 'data/processed' e
     fazendo fallback para 'data/raw' se necessário.
     """
-    raiz = Path(__file__).resolve().parent.parent
+    raiz = Path(__file__).resolve().parents[2]
 
     if argumento_dados:
         p = Path(argumento_dados)

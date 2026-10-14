@@ -42,7 +42,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from PIL import Image
 
 # Garante que a raiz do projeto esteja no sys.path
-_RAIZ_PROJETO = Path(__file__).resolve().parent.parent
+_RAIZ_PROJETO = Path(__file__).resolve().parents[2]
 if str(_RAIZ_PROJETO) not in sys.path:
     sys.path.insert(0, str(_RAIZ_PROJETO))
 
@@ -609,7 +609,7 @@ def executar_experimento_binario(
 
 def resolver_caminho_dados(argumento_dados: Optional[str]) -> Path:
     """Detecta automaticamente o diretório de dados."""
-    raiz = Path(__file__).resolve().parent.parent
+    raiz = Path(__file__).resolve().parents[2]
     if argumento_dados:
         p = Path(argumento_dados)
         if not p.is_absolute():

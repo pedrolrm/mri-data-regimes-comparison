@@ -43,7 +43,7 @@ import torch
 from torchvision import transforms
 
 # Garante raiz do repositório no sys.path
-_RAIZ_PROJETO = Path(__file__).resolve().parent.parent
+_RAIZ_PROJETO = Path(__file__).resolve().parents[2]
 if str(_RAIZ_PROJETO) not in sys.path:
     sys.path.insert(0, str(_RAIZ_PROJETO))
 
