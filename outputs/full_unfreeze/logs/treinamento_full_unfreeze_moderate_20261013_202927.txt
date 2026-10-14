@@ -1,0 +1,260 @@
+=== SESSÃO DE TREINAMENTO: RESNET-50 FULL UNFREEZING (RADIMAGENET) ===
+Início: 2026-10-13 20:29:27
+Arquivo de Log: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\full_unfreeze\logs\treinamento_full_unfreeze_moderate_20261013_202927.txt
+
+================================================================================
+CONFIGURAÇÃO DE HARDWARE (FULL UNFREEZING - RTX 5060)
+================================================================================
+Dispositivo:           NVIDIA GeForce RTX 5060
+VRAM Total:            7.93 GB
+Versão PyTorch:        2.12.0.dev20260408+cu128
+Versão CUDA:           12.8
+Matmul Precision:      high (TF32 habilitado para Tensor Cores)
+Precisão Mista (AMP):  torch.bfloat16 (Nativo RTX 5060)
+================================================================================
+Tarefa Selecionada:      Extremos (NonDemented vs ModerateDemented)
+Regime de Amostras:      N = 1000
+NonDemented:             500 amostras
+ModerateDemented:        500 amostras
+Total Selecionado:       1000
+Divisão Treino/Teste:    Treino = 800 | Teste = 200
+
+Instanciando ResNet-50 com RadImageNet (FULL UNFREEZING)...
+[FULL UNFREEZING] Parâmetros Treináveis na Época 1: 23,512,130 / 23,512,130 (100% Descongelado)
+================================================================================
+TREINAMENTO: FULL UNFREEZING (BINARY_MODERATE | 10 ÉPOCAS | BATCH: 64)
+Backbone LR: 1e-05 | Head LR: 0.0001 | Sem Warmup Congelado
+================================================================================
+Época   | Train Loss | Train Acc  | Val Loss   | Val Acc    | Val F1-Mac | AUC     | Tempo    | VRAM
+--------------------------------------------------------------------------------
+1       | 4.3622     | 53.87    % | 0.8434     | 61.50    % | 0.5859     * | 0.6989  | 56.93  s | 3189MB
+2       | 3.0603     | 55.00    % | 1.2952     | 58.50    % | 0.5252       | 0.7211  | 2.50   s | 3189MB
+3       | 2.7236     | 58.00    % | 1.4452     | 62.00    % | 0.5796       | 0.7419  | 2.45   s | 3189MB
+4       | 1.5984     | 57.50    % | 1.0577     | 60.50    % | 0.5673       | 0.7244  | 2.53   s | 3189MB
+5       | 1.5101     | 57.12    % | 1.0586     | 60.50    % | 0.5701       | 0.7157  | 2.49   s | 3189MB
+
+[EARLY STOPPING] Parada antecipada após 4 épocas sem melhora.
+================================================================================
+Treino Full Unfreezing concluído em 67.28s (1.12 min).
+Melhor modelo salvo em: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\full_unfreeze\checkpoints\best_resnet50_full_unfreeze_binary_moderate_regime_1000.pt
+================================================================================
+
+>>> RESULTADOS FINAIS - FULL UNFREEZING (REGIME N=1000) <<<
+Amostras: Treino = 800 | Teste = 200
+Acurácia Geral: 61.50% | F1-Macro: 0.5859 | ROC-AUC: 0.6989
+Sensibilidade: 35.00% | Especificidade: 88.00%
+Tempo Total:   67.28 s
+
+--- Relatório de Classificação ---
+                  precision    recall  f1-score   support
+
+     NonDemented     0.5752    0.8800    0.6957       100
+ModerateDemented     0.7447    0.3500    0.4762       100
+
+        accuracy                         0.6150       200
+       macro avg     0.6599    0.6150    0.5859       200
+    weighted avg     0.6599    0.6150    0.5859       200
+
+--- Matriz de Confusão ---
+[[88 12]
+ [65 35]]
+================================================================================
+
+================================================================================
+CONFIGURAÇÃO DE HARDWARE (FULL UNFREEZING - RTX 5060)
+================================================================================
+Dispositivo:           NVIDIA GeForce RTX 5060
+VRAM Total:            7.93 GB
+Versão PyTorch:        2.12.0.dev20260408+cu128
+Versão CUDA:           12.8
+Matmul Precision:      high (TF32 habilitado para Tensor Cores)
+Precisão Mista (AMP):  torch.bfloat16 (Nativo RTX 5060)
+================================================================================
+Tarefa Selecionada:      Extremos (NonDemented vs ModerateDemented)
+Regime de Amostras:      N = 5000
+NonDemented:             2500 amostras
+ModerateDemented:        2500 amostras
+Total Selecionado:       5000
+Divisão Treino/Teste:    Treino = 4000 | Teste = 1000
+
+Instanciando ResNet-50 com RadImageNet (FULL UNFREEZING)...
+[FULL UNFREEZING] Parâmetros Treináveis na Época 1: 23,512,130 / 23,512,130 (100% Descongelado)
+================================================================================
+TREINAMENTO: FULL UNFREEZING (BINARY_MODERATE | 10 ÉPOCAS | BATCH: 64)
+Backbone LR: 1e-05 | Head LR: 0.0001 | Sem Warmup Congelado
+================================================================================
+Época   | Train Loss | Train Acc  | Val Loss   | Val Acc    | Val F1-Mac | AUC     | Tempo    | VRAM
+--------------------------------------------------------------------------------
+1       | 2.5137     | 58.38    % | 0.9350     | 67.60    % | 0.6608     * | 0.7886  | 35.92  s | 3189MB
+2       | 1.4170     | 60.92    % | 0.7108     | 69.20    % | 0.6800     * | 0.8048  | 10.49  s | 3189MB
+3       | 1.3411     | 63.68    % | 0.5989     | 72.20    % | 0.7137     * | 0.8427  | 10.23  s | 3189MB
+4       | 0.9859     | 66.05    % | 0.5488     | 74.50    % | 0.7400     * | 0.8646  | 10.20  s | 3189MB
+5       | 0.9494     | 66.97    % | 0.5062     | 75.90    % | 0.7554     * | 0.8784  | 10.18  s | 3189MB
+6       | 0.7988     | 69.17    % | 0.5144     | 76.00    % | 0.7552       | 0.8793  | 10.40  s | 3189MB
+7       | 0.8157     | 70.80    % | 0.4844     | 78.00    % | 0.7769     * | 0.8881  | 10.18  s | 3189MB
+8       | 0.7737     | 71.23    % | 0.4866     | 77.90    % | 0.7756       | 0.8923  | 10.40  s | 3189MB
+9       | 0.8290     | 71.90    % | 0.4698     | 78.60    % | 0.7835     * | 0.8946  | 10.55  s | 3189MB
+10      | 0.7745     | 71.28    % | 0.4785     | 77.40    % | 0.7706       | 0.8981  | 10.42  s | 3189MB
+================================================================================
+Treino Full Unfreezing concluído em 132.41s (2.21 min).
+Melhor modelo salvo em: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\full_unfreeze\checkpoints\best_resnet50_full_unfreeze_binary_moderate_regime_5000.pt
+================================================================================
+
+>>> RESULTADOS FINAIS - FULL UNFREEZING (REGIME N=5000) <<<
+Amostras: Treino = 4000 | Teste = 1000
+Acurácia Geral: 78.60% | F1-Macro: 0.7835 | ROC-AUC: 0.8946
+Sensibilidade: 67.80% | Especificidade: 89.40%
+Tempo Total:   132.41 s
+
+--- Relatório de Classificação ---
+                  precision    recall  f1-score   support
+
+     NonDemented     0.7352    0.8940    0.8069       500
+ModerateDemented     0.8648    0.6780    0.7601       500
+
+        accuracy                         0.7860      1000
+       macro avg     0.8000    0.7860    0.7835      1000
+    weighted avg     0.8000    0.7860    0.7835      1000
+
+--- Matriz de Confusão ---
+[[447  53]
+ [161 339]]
+================================================================================
+
+================================================================================
+CONFIGURAÇÃO DE HARDWARE (FULL UNFREEZING - RTX 5060)
+================================================================================
+Dispositivo:           NVIDIA GeForce RTX 5060
+VRAM Total:            7.93 GB
+Versão PyTorch:        2.12.0.dev20260408+cu128
+Versão CUDA:           12.8
+Matmul Precision:      high (TF32 habilitado para Tensor Cores)
+Precisão Mista (AMP):  torch.bfloat16 (Nativo RTX 5060)
+================================================================================
+Tarefa Selecionada:      Extremos (NonDemented vs ModerateDemented)
+Regime de Amostras:      N = 10000
+NonDemented:             5000 amostras
+ModerateDemented:        5000 amostras
+Total Selecionado:       10000
+Divisão Treino/Teste:    Treino = 8000 | Teste = 2000
+
+Instanciando ResNet-50 com RadImageNet (FULL UNFREEZING)...
+[FULL UNFREEZING] Parâmetros Treináveis na Época 1: 23,512,130 / 23,512,130 (100% Descongelado)
+================================================================================
+TREINAMENTO: FULL UNFREEZING (BINARY_MODERATE | 10 ÉPOCAS | BATCH: 64)
+Backbone LR: 1e-05 | Head LR: 0.0001 | Sem Warmup Congelado
+================================================================================
+Época   | Train Loss | Train Acc  | Val Loss   | Val Acc    | Val F1-Mac | AUC     | Tempo    | VRAM
+--------------------------------------------------------------------------------
+1       | 1.8738     | 59.69    % | 0.7299     | 66.75    % | 0.6527     * | 0.7728  | 46.36  s | 3189MB
+2       | 1.1078     | 65.09    % | 0.6256     | 71.05    % | 0.7027     * | 0.8250  | 20.24  s | 3189MB
+3       | 0.8707     | 68.70    % | 0.5392     | 74.40    % | 0.7386     * | 0.8682  | 20.61  s | 3189MB
+4       | 0.7364     | 72.30    % | 0.4712     | 78.25    % | 0.7796     * | 0.8957  | 20.13  s | 3189MB
+5       | 0.6802     | 74.75    % | 0.4217     | 81.00    % | 0.8084     * | 0.9135  | 19.92  s | 3189MB
+6       | 0.6049     | 76.17    % | 0.4074     | 82.10    % | 0.8194     * | 0.9213  | 20.28  s | 3189MB
+7       | 0.6148     | 78.11    % | 0.3700     | 83.80    % | 0.8372     * | 0.9300  | 20.60  s | 3189MB
+8       | 0.5401     | 79.67    % | 0.3728     | 83.60    % | 0.8346       | 0.9346  | 19.87  s | 3189MB
+9       | 0.5674     | 79.11    % | 0.3695     | 83.55    % | 0.8342       | 0.9357  | 19.97  s | 3189MB
+10      | 0.5308     | 79.70    % | 0.3536     | 84.65    % | 0.8456     * | 0.9386  | 20.20  s | 3189MB
+================================================================================
+Treino Full Unfreezing concluído em 230.75s (3.85 min).
+Melhor modelo salvo em: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\full_unfreeze\checkpoints\best_resnet50_full_unfreeze_binary_moderate_regime_10000.pt
+================================================================================
+
+>>> RESULTADOS FINAIS - FULL UNFREEZING (REGIME N=10000) <<<
+Amostras: Treino = 8000 | Teste = 2000
+Acurácia Geral: 84.65% | F1-Macro: 0.8456 | ROC-AUC: 0.9386
+Sensibilidade: 77.20% | Especificidade: 92.10%
+Tempo Total:   230.75 s
+
+--- Relatório de Classificação ---
+                  precision    recall  f1-score   support
+
+     NonDemented     0.8016    0.9210    0.8571      1000
+ModerateDemented     0.9072    0.7720    0.8341      1000
+
+        accuracy                         0.8465      2000
+       macro avg     0.8544    0.8465    0.8456      2000
+    weighted avg     0.8544    0.8465    0.8456      2000
+
+--- Matriz de Confusão ---
+[[921  79]
+ [228 772]]
+================================================================================
+
+================================================================================
+CONFIGURAÇÃO DE HARDWARE (FULL UNFREEZING - RTX 5060)
+================================================================================
+Dispositivo:           NVIDIA GeForce RTX 5060
+VRAM Total:            7.93 GB
+Versão PyTorch:        2.12.0.dev20260408+cu128
+Versão CUDA:           12.8
+Matmul Precision:      high (TF32 habilitado para Tensor Cores)
+Precisão Mista (AMP):  torch.bfloat16 (Nativo RTX 5060)
+================================================================================
+Tarefa Selecionada:      Extremos (NonDemented vs ModerateDemented)
+Regime de Amostras:      N = 20000
+NonDemented:             10000 amostras
+ModerateDemented:        10000 amostras
+Total Selecionado:       20000
+Divisão Treino/Teste:    Treino = 16000 | Teste = 4000
+
+Instanciando ResNet-50 com RadImageNet (FULL UNFREEZING)...
+[FULL UNFREEZING] Parâmetros Treináveis na Época 1: 23,512,130 / 23,512,130 (100% Descongelado)
+================================================================================
+TREINAMENTO: FULL UNFREEZING (BINARY_MODERATE | 10 ÉPOCAS | BATCH: 64)
+Backbone LR: 1e-05 | Head LR: 0.0001 | Sem Warmup Congelado
+================================================================================
+Época   | Train Loss | Train Acc  | Val Loss   | Val Acc    | Val F1-Mac | AUC     | Tempo    | VRAM
+--------------------------------------------------------------------------------
+1       | 1.6180     | 62.19    % | 0.6373     | 70.90    % | 0.7001     * | 0.8246  | 57.66  s | 3189MB
+2       | 0.7936     | 70.43    % | 0.4782     | 78.03    % | 0.7773     * | 0.8938  | 39.58  s | 3189MB
+3       | 0.6197     | 75.71    % | 0.3645     | 83.97    % | 0.8391     * | 0.9304  | 39.39  s | 3189MB
+4       | 0.5261     | 79.94    % | 0.3097     | 86.70    % | 0.8667     * | 0.9476  | 39.37  s | 3189MB
+5       | 0.4631     | 82.16    % | 0.2632     | 88.70    % | 0.8869     * | 0.9615  | 39.36  s | 3189MB
+6       | 0.4128     | 84.28    % | 0.2405     | 90.08    % | 0.9007     * | 0.9672  | 39.55  s | 3189MB
+7       | 0.3741     | 85.68    % | 0.2278     | 90.70    % | 0.9069     * | 0.9709  | 41.19  s | 3189MB
+8       | 0.3436     | 86.41    % | 0.2349     | 90.08    % | 0.9005       | 0.9728  | 40.69  s | 3189MB
+9       | 0.3393     | 87.11    % | 0.2099     | 91.70    % | 0.9170     * | 0.9746  | 39.41  s | 3189MB
+10      | 0.3268     | 87.40    % | 0.2037     | 91.72    % | 0.9172     * | 0.9759  | 39.90  s | 3189MB
+================================================================================
+Treino Full Unfreezing concluído em 420.50s (7.01 min).
+Melhor modelo salvo em: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\full_unfreeze\checkpoints\best_resnet50_full_unfreeze_binary_moderate_regime_20000.pt
+================================================================================
+
+>>> RESULTADOS FINAIS - FULL UNFREEZING (REGIME N=20000) <<<
+Amostras: Treino = 16000 | Teste = 4000
+Acurácia Geral: 91.72% | F1-Macro: 0.9172 | ROC-AUC: 0.9759
+Sensibilidade: 89.50% | Especificidade: 93.95%
+Tempo Total:   420.50 s
+
+--- Relatório de Classificação ---
+                  precision    recall  f1-score   support
+
+     NonDemented     0.8995    0.9395    0.9191      2000
+ModerateDemented     0.9367    0.8950    0.9154      2000
+
+        accuracy                         0.9173      4000
+       macro avg     0.9181    0.9173    0.9172      4000
+    weighted avg     0.9181    0.9173    0.9172      4000
+
+--- Matriz de Confusão ---
+[[1879  121]
+ [ 210 1790]]
+================================================================================
+
+=========================================================================================================
+TABELA DE RESULTADOS (FULL UNFREEZING) - EXTREMOS (NONDEMENTED VS MODERATEDEMENTED)
+=========================================================================================================
+Regime (N)   | N Treino   | Tempo (s)   | Acurácia   | Sensibilidade   | Especificidade   | F1-Score
+---------------------------------------------------------------------------------------------------------
+1000         | 800        | 67.3      s | 61.50    % | 35.00         % | 88.00          % | 0.5859  
+5000         | 4000       | 132.4     s | 78.60    % | 67.80         % | 89.40          % | 0.7835  
+10000        | 8000       | 230.7     s | 84.65    % | 77.20         % | 92.10          % | 0.8456  
+20000        | 16000      | 420.5     s | 91.72    % | 89.50         % | 93.95          % | 0.9172  
+=========================================================================================================
+
+[INFO] Relatório Full Unfreezing salvo em: outputs\full_unfreeze\relatorio_regimes_resnet50_full_unfreeze_moderate.json
+
+
+Sessão finalizada: 2026-10-13 20:43:56

@@ -1,0 +1,265 @@
+=== SESSÃO DE TREINAMENTO BINÁRIO RESNET-50 RADIMAGENET ===
+Início: 2026-10-13 19:32:09
+Arquivo de Log: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\logs\treinamento_resnet50_binario_moderate_20261013_193209.txt
+
+===========================================================================
+CONFIGURAÇÃO DE ACELERAÇÃO DE HARDWARE (RTX 5060)
+===========================================================================
+Dispositivo:           NVIDIA GeForce RTX 5060
+VRAM Total:            7.93 GB
+Versão PyTorch:        2.12.0.dev20260408+cu128
+Versão CUDA:           12.8
+Matmul Precision:      high (TF32 habilitado para Tensor Cores)
+Precisão Mista (AMP):  torch.bfloat16 (Nativo RTX 5060)
+===========================================================================
+Configuração da Tarefa:  Extremos (NonDemented vs ModerateDemented)
+Regime Selecionado:      N = 1000
+Amostras NonDemented:    500
+Amostras Moderate:       500
+Total Selecionado:       1000
+Divisão Treino/Teste:    Treino = 800 | Teste = 200
+
+Instanciando ResNet-50 Binária (num_classes=2) com RadImageNet...
+[FASE 1] Congelando backbone pelas primeiras 2 épocas...
+================================================================================
+TREINAMENTO BINÁRIO (BINARY_MODERATE | 10 ÉPOCAS | BATCH: 64)
+================================================================================
+Época   | Train Loss | Train Acc  | Val Loss   | Val Acc    | Val F1-Mac | AUC     | Tempo    | VRAM
+--------------------------------------------------------------------------------
+1       | 4.5491     | 54.87    % | 0.7776     | 60.00    % | 0.5960     * | 0.6728  | 48.07  s | 783MB
+2       | 3.6488     | 54.87    % | 1.0961     | 60.50    % | 0.5752       | 0.7109  | 1.22   s | 783MB
+
+[FASE 2] Descongelando backbone para Fine-Tuning completo...
+3       | 1.9852     | 59.50    % | 0.8251     | 68.00    % | 0.6604     * | 0.8307  | 11.82  s | 3189MB
+4       | 0.8954     | 65.75    % | 0.4383     | 78.50    % | 0.7830     * | 0.8874  | 2.34   s | 3189MB
+5       | 0.7363     | 69.50    % | 0.3661     | 81.00    % | 0.8098     * | 0.9172  | 2.30   s | 3189MB
+6       | 0.7065     | 72.25    % | 0.3833     | 80.00    % | 0.7966       | 0.9281  | 2.21   s | 3189MB
+7       | 0.6583     | 73.75    % | 0.3806     | 82.00    % | 0.8169     * | 0.9365  | 2.19   s | 3189MB
+8       | 0.5449     | 78.88    % | 0.3849     | 83.00    % | 0.8261     * | 0.9449  | 2.19   s | 3189MB
+9       | 0.4945     | 80.75    % | 0.3654     | 82.00    % | 0.8159       | 0.9504  | 2.19   s | 3189MB
+10      | 0.5760     | 78.50    % | 0.3499     | 84.00    % | 0.8372     * | 0.9498  | 2.21   s | 3189MB
+================================================================================
+Treino concluído em 79.56s (1.33 min).
+Melhor modelo salvo em: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\checkpoints\best_resnet50_binary_moderate_regime_1000.pt
+================================================================================
+
+>>> RESULTADOS FINAIS - BINARY_MODERATE (REGIME N=1000) <<<
+Amostras: Treino = 800 | Teste = 200
+Acurácia Geral: 84.00% | F1-Macro: 0.8372 | ROC-AUC: 0.9498
+Sensibilidade: 71.00% | Especificidade: 97.00%
+Tempo Total:   79.56 s
+
+--- Relatório de Classificação ---
+                  precision    recall  f1-score   support
+
+     NonDemented     0.7698    0.9700    0.8584       100
+ModerateDemented     0.9595    0.7100    0.8161       100
+
+        accuracy                         0.8400       200
+       macro avg     0.8647    0.8400    0.8372       200
+    weighted avg     0.8647    0.8400    0.8372       200
+
+--- Matriz de Confusão ---
+[[97  3]
+ [29 71]]
+================================================================================
+
+===========================================================================
+CONFIGURAÇÃO DE ACELERAÇÃO DE HARDWARE (RTX 5060)
+===========================================================================
+Dispositivo:           NVIDIA GeForce RTX 5060
+VRAM Total:            7.93 GB
+Versão PyTorch:        2.12.0.dev20260408+cu128
+Versão CUDA:           12.8
+Matmul Precision:      high (TF32 habilitado para Tensor Cores)
+Precisão Mista (AMP):  torch.bfloat16 (Nativo RTX 5060)
+===========================================================================
+Configuração da Tarefa:  Extremos (NonDemented vs ModerateDemented)
+Regime Selecionado:      N = 5000
+Amostras NonDemented:    2500
+Amostras Moderate:       2500
+Total Selecionado:       5000
+Divisão Treino/Teste:    Treino = 4000 | Teste = 1000
+
+Instanciando ResNet-50 Binária (num_classes=2) com RadImageNet...
+[FASE 1] Congelando backbone pelas primeiras 2 épocas...
+================================================================================
+TREINAMENTO BINÁRIO (BINARY_MODERATE | 10 ÉPOCAS | BATCH: 64)
+================================================================================
+Época   | Train Loss | Train Acc  | Val Loss   | Val Acc    | Val F1-Mac | AUC     | Tempo    | VRAM
+--------------------------------------------------------------------------------
+1       | 3.8195     | 57.77    % | 1.2811     | 69.50    % | 0.6839     * | 0.7966  | 32.95  s | 3189MB
+2       | 3.2309     | 59.80    % | 1.0060     | 69.90    % | 0.6861     * | 0.8258  | 5.49   s | 3189MB
+
+[FASE 2] Descongelando backbone para Fine-Tuning completo...
+3       | 0.9603     | 72.08    % | 0.3248     | 85.60    % | 0.8550     * | 0.9533  | 10.33  s | 3189MB
+4       | 0.4112     | 84.35    % | 0.2041     | 91.80    % | 0.9179     * | 0.9784  | 10.09  s | 3189MB
+5       | 0.2788     | 89.53    % | 0.1320     | 94.90    % | 0.9490     * | 0.9896  | 10.39  s | 3189MB
+6       | 0.2102     | 92.00    % | 0.1255     | 94.90    % | 0.9490       | 0.9919  | 10.22  s | 3189MB
+7       | 0.1782     | 93.30    % | 0.0914     | 96.70    % | 0.9670     * | 0.9941  | 10.03  s | 3189MB
+8       | 0.1504     | 94.60    % | 0.0835     | 97.10    % | 0.9710     * | 0.9956  | 10.15  s | 3189MB
+9       | 0.1404     | 94.83    % | 0.0739     | 97.10    % | 0.9710       | 0.9960  | 10.01  s | 3189MB
+10      | 0.1450     | 94.70    % | 0.0773     | 97.40    % | 0.9740     * | 0.9962  | 10.38  s | 3189MB
+================================================================================
+Treino concluído em 123.25s (2.05 min).
+Melhor modelo salvo em: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\checkpoints\best_resnet50_binary_moderate_regime_5000.pt
+================================================================================
+
+>>> RESULTADOS FINAIS - BINARY_MODERATE (REGIME N=5000) <<<
+Amostras: Treino = 4000 | Teste = 1000
+Acurácia Geral: 97.40% | F1-Macro: 0.9740 | ROC-AUC: 0.9962
+Sensibilidade: 96.80% | Especificidade: 98.00%
+Tempo Total:   123.25 s
+
+--- Relatório de Classificação ---
+                  precision    recall  f1-score   support
+
+     NonDemented     0.9684    0.9800    0.9742       500
+ModerateDemented     0.9798    0.9680    0.9738       500
+
+        accuracy                         0.9740      1000
+       macro avg     0.9741    0.9740    0.9740      1000
+    weighted avg     0.9741    0.9740    0.9740      1000
+
+--- Matriz de Confusão ---
+[[490  10]
+ [ 16 484]]
+================================================================================
+
+===========================================================================
+CONFIGURAÇÃO DE ACELERAÇÃO DE HARDWARE (RTX 5060)
+===========================================================================
+Dispositivo:           NVIDIA GeForce RTX 5060
+VRAM Total:            7.93 GB
+Versão PyTorch:        2.12.0.dev20260408+cu128
+Versão CUDA:           12.8
+Matmul Precision:      high (TF32 habilitado para Tensor Cores)
+Precisão Mista (AMP):  torch.bfloat16 (Nativo RTX 5060)
+===========================================================================
+Configuração da Tarefa:  Extremos (NonDemented vs ModerateDemented)
+Regime Selecionado:      N = 10000
+Amostras NonDemented:    5000
+Amostras Moderate:       5000
+Total Selecionado:       10000
+Divisão Treino/Teste:    Treino = 8000 | Teste = 2000
+
+Instanciando ResNet-50 Binária (num_classes=2) com RadImageNet...
+[FASE 1] Congelando backbone pelas primeiras 2 épocas...
+================================================================================
+TREINAMENTO BINÁRIO (BINARY_MODERATE | 10 ÉPOCAS | BATCH: 64)
+================================================================================
+Época   | Train Loss | Train Acc  | Val Loss   | Val Acc    | Val F1-Mac | AUC     | Tempo    | VRAM
+--------------------------------------------------------------------------------
+1       | 3.4686     | 58.84    % | 1.6234     | 60.50    % | 0.5557     * | 0.7727  | 38.77  s | 3189MB
+2       | 2.8815     | 62.99    % | 1.5259     | 61.30    % | 0.5604     * | 0.8151  | 10.18  s | 3189MB
+
+[FASE 2] Descongelando backbone para Fine-Tuning completo...
+3       | 0.6942     | 77.71    % | 0.2567     | 89.15    % | 0.8908     * | 0.9755  | 20.25  s | 3189MB
+4       | 0.2579     | 89.91    % | 0.1044     | 96.30    % | 0.9630     * | 0.9919  | 19.89  s | 3189MB
+5       | 0.1653     | 93.81    % | 0.0737     | 97.05    % | 0.9705     * | 0.9962  | 20.77  s | 3189MB
+6       | 0.1122     | 96.00    % | 0.0516     | 98.30    % | 0.9830     * | 0.9976  | 20.34  s | 3189MB
+7       | 0.0896     | 96.97    % | 0.0389     | 98.90    % | 0.9890     * | 0.9985  | 20.27  s | 3189MB
+8       | 0.0706     | 97.58    % | 0.0379     | 98.75    % | 0.9875       | 0.9988  | 19.90  s | 3189MB
+9       | 0.0703     | 97.49    % | 0.0370     | 98.80    % | 0.9880       | 0.9990  | 20.10  s | 3189MB
+10      | 0.0668     | 97.52    % | 0.0341     | 98.90    % | 0.9890     * | 0.9990  | 20.77  s | 3189MB
+================================================================================
+Treino concluído em 213.21s (3.55 min).
+Melhor modelo salvo em: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\checkpoints\best_resnet50_binary_moderate_regime_10000.pt
+================================================================================
+
+>>> RESULTADOS FINAIS - BINARY_MODERATE (REGIME N=10000) <<<
+Amostras: Treino = 8000 | Teste = 2000
+Acurácia Geral: 98.90% | F1-Macro: 0.9890 | ROC-AUC: 0.9990
+Sensibilidade: 98.90% | Especificidade: 98.90%
+Tempo Total:   213.21 s
+
+--- Relatório de Classificação ---
+                  precision    recall  f1-score   support
+
+     NonDemented     0.9890    0.9890    0.9890      1000
+ModerateDemented     0.9890    0.9890    0.9890      1000
+
+        accuracy                         0.9890      2000
+       macro avg     0.9890    0.9890    0.9890      2000
+    weighted avg     0.9890    0.9890    0.9890      2000
+
+--- Matriz de Confusão ---
+[[989  11]
+ [ 11 989]]
+================================================================================
+
+===========================================================================
+CONFIGURAÇÃO DE ACELERAÇÃO DE HARDWARE (RTX 5060)
+===========================================================================
+Dispositivo:           NVIDIA GeForce RTX 5060
+VRAM Total:            7.93 GB
+Versão PyTorch:        2.12.0.dev20260408+cu128
+Versão CUDA:           12.8
+Matmul Precision:      high (TF32 habilitado para Tensor Cores)
+Precisão Mista (AMP):  torch.bfloat16 (Nativo RTX 5060)
+===========================================================================
+Configuração da Tarefa:  Extremos (NonDemented vs ModerateDemented)
+Regime Selecionado:      N = 20000
+Amostras NonDemented:    10000
+Amostras Moderate:       10000
+Total Selecionado:       20000
+Divisão Treino/Teste:    Treino = 16000 | Teste = 4000
+
+Instanciando ResNet-50 Binária (num_classes=2) com RadImageNet...
+[FASE 1] Congelando backbone pelas primeiras 2 épocas...
+================================================================================
+TREINAMENTO BINÁRIO (BINARY_MODERATE | 10 ÉPOCAS | BATCH: 64)
+================================================================================
+Época   | Train Loss | Train Acc  | Val Loss   | Val Acc    | Val F1-Mac | AUC     | Tempo    | VRAM
+--------------------------------------------------------------------------------
+1       | 3.2701     | 59.97    % | 1.1247     | 66.77    % | 0.6457     * | 0.8270  | 37.94  s | 3189MB
+2       | 2.6166     | 66.14    % | 1.3862     | 66.33    % | 0.6310       | 0.8750  | 20.05  s | 3189MB
+
+[FASE 2] Descongelando backbone para Fine-Tuning completo...
+3       | 0.3579     | 87.17    % | 0.0817     | 97.10    % | 0.9710     * | 0.9950  | 41.50  s | 3189MB
+4       | 0.1044     | 96.09    % | 0.0349     | 98.88    % | 0.9887     * | 0.9988  | 41.36  s | 3189MB
+5       | 0.0497     | 98.29    % | 0.0193     | 99.30    % | 0.9930     * | 0.9995  | 40.27  s | 3189MB
+6       | 0.0299     | 99.01    % | 0.0142     | 99.33    % | 0.9932     * | 0.9998  | 40.74  s | 3189MB
+7       | 0.0221     | 99.25    % | 0.0111     | 99.55    % | 0.9955     * | 0.9999  | 40.56  s | 3189MB
+8       | 0.0155     | 99.51    % | 0.0106     | 99.75    % | 0.9975     * | 0.9999  | 40.47  s | 3189MB
+9       | 0.0141     | 99.58    % | 0.0094     | 99.70    % | 0.9970       | 0.9999  | 40.94  s | 3189MB
+10      | 0.0119     | 99.66    % | 0.0096     | 99.67    % | 0.9967       | 0.9999  | 41.11  s | 3189MB
+================================================================================
+Treino concluído em 386.84s (6.45 min).
+Melhor modelo salvo em: C:\Users\jonat\Desktop\resnet50\mri-data-regimes-comparison\outputs\checkpoints\best_resnet50_binary_moderate_regime_20000.pt
+================================================================================
+
+>>> RESULTADOS FINAIS - BINARY_MODERATE (REGIME N=20000) <<<
+Amostras: Treino = 16000 | Teste = 4000
+Acurácia Geral: 99.75% | F1-Macro: 0.9975 | ROC-AUC: 0.9999
+Sensibilidade: 99.70% | Especificidade: 99.80%
+Tempo Total:   386.84 s
+
+--- Relatório de Classificação ---
+                  precision    recall  f1-score   support
+
+     NonDemented     0.9970    0.9980    0.9975      2000
+ModerateDemented     0.9980    0.9970    0.9975      2000
+
+        accuracy                         0.9975      4000
+       macro avg     0.9975    0.9975    0.9975      4000
+    weighted avg     0.9975    0.9975    0.9975      4000
+
+--- Matriz de Confusão ---
+[[1996    4]
+ [   6 1994]]
+================================================================================
+
+=========================================================================================================
+TABELA DE RESULTADOS POR REGIME - EXTREMOS (NONDEMENTED VS MODERATEDEMENTED)
+=========================================================================================================
+Regime (N)   | N Treino   | Tempo (s)   | Acurácia   | Sensibilidade   | Especificidade   | F1-Score
+---------------------------------------------------------------------------------------------------------
+1000         | 800        | 79.6      s | 84.00    % | 71.00         % | 97.00          % | 0.8372  
+5000         | 4000       | 123.3     s | 97.40    % | 96.80         % | 98.00          % | 0.9740  
+10000        | 8000       | 213.2     s | 98.90    % | 98.90         % | 98.90          % | 0.9890  
+20000        | 16000      | 386.8     s | 99.75    % | 99.70         % | 99.80          % | 0.9975  
+=========================================================================================================
+
+
+Sessão finalizada: 2026-10-13 19:45:49
